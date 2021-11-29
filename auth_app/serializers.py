@@ -16,11 +16,13 @@ class RegisterSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         attrs = super().validate(attrs)
+        password = attrs["password"]
+        confirm_password = attrs["confirm_password"]
 
-        if attrs['password'] == attrs['confirm_password']:
-            return attrs['password']
+        if password != confirm_password:
+            raise serializers.ValidationError(detail="password does not match", code="password_match")
 
-        raise serializers.ValidationError(detail="password does not match")
+        return attrs
 
     def create(self, validated_data):
         print(validated_data)
